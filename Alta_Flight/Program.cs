@@ -1,3 +1,7 @@
+using Alta_Flight.Data;
+using Alta_Flight.Services;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +10,16 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<AppDBContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IAccountGroupService, AccountGroupService>();
+builder.Services.AddScoped<IGroupService, GroupService>();
+builder.Services.AddScoped<IUpdateVersionService, UpdateVersionService>();
+
 
 var app = builder.Build();
 
