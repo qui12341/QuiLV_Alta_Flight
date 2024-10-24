@@ -19,6 +19,11 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IAccountGroupService, AccountGroupService>();
 builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddScoped<IUpdateVersionService, UpdateVersionService>();
+builder.Services.AddScoped<IPermissionService, PermissionService>();
+builder.Services.AddScoped<IConfigurationService, ConfigurationService>();
+builder.Services.AddScoped<IFlightService, FlightService>();
+builder.Services.AddScoped<IFlightDocumentListService, FlightDocumentListService>();
+builder.Services.AddScoped<IDocumentListService, DocumentListService>();
 
 
 var app = builder.Build();

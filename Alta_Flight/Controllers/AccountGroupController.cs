@@ -14,47 +14,47 @@ namespace Alta_Flight.Controllers
         {
             _accountGroupService = accountGroupService;
         }
-        // GET: api/accountgroups
+
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Account_Groups>>> GetAllAccountGroups()
+        public async Task<ActionResult<IEnumerable<Account_Groups>>> GetAccountGroup()
         {
-            var accountGroups = await _accountGroupService.GetAllAccountGroupsAsync();
-            return Ok(accountGroups);
+            var acc_groups = await _accountGroupService.GetAllAccountGroupAsync();
+            return Ok(acc_groups);
         }
 
-        // GET: api/accountgroups/{id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<Account_Groups>> GetAccountGroupById(int id)
+        public async Task<ActionResult<Account_Groups>> GetAccountGroup(int id)
         {
-            var accountGroup = await _accountGroupService.GetAccountGroupByIdAsync(id);
-            if (accountGroup == null)
+            var acc_groups = await _accountGroupService.GetAccountGroupByIdAsync(id);
+            if (acc_groups == null)
             {
                 return NotFound();
             }
-            return Ok(accountGroup);
+            return Ok(acc_groups);
         }
-
-        // POST: api/accountgroups
         [HttpPost]
-        public async Task<ActionResult> AddAccountToGroup(int accountId, int groupId)
+        public async Task<ActionResult<Account_Groups>> CreateGroup(Account_Groups acc_groups)
         {
-            await _accountGroupService.AddAccountToGroupAsync(accountId, groupId);
-            return Ok();
+            await _accountGroupService.CreateAccountGroupAsync(acc_groups);
+            return CreatedAtAction(nameof(GetAccountGroup), new { id = acc_groups.Id }, acc_groups);
         }
 
-        // PUT: api/accountgroups/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAccountGroup(int id, int groupId)
+        public async Task<IActionResult> UpdateGroup(int id, Account_Groups acc_groups)
         {
-            await _accountGroupService.UpdateAccountGroupAsync(id, groupId);
+            if (id != acc_groups.Id)
+            {
+                return BadRequest();
+            }
+
+            await _accountGroupService.UpdateAccountGroupAsync(acc_groups);
             return NoContent();
         }
 
-        // DELETE: api/accountgroups/{accountId}/{groupId}
-        [HttpDelete("{accountId}/{groupId}")]
-        public async Task<IActionResult> RemoveAccountFromGroup(int accountId, int groupId)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteGroup(int id)
         {
-            await _accountGroupService.RemoveAccountFromGroupAsync(accountId, groupId);
+            await _accountGroupService.DeleteAccountGroupAsync(id);
             return NoContent();
         }
 

@@ -20,7 +20,6 @@ namespace Alta_Flight.Model
         // group_id tùy chọn, không bắt buộc
         public int? group_id { get; set; }
 
-        //public ICollection<Account_Groups> AccountGroups { get; set; }
 
     }
 }

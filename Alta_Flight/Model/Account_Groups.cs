@@ -13,5 +13,6 @@ namespace Alta_Flight.Model
         public int? accountID { get; set; }
 
         public int? group_id { get; set; }
+
     }
 }

@@ -1,65 +1,114 @@
 ﻿using Alta_Flight.Model;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Principal;
 
 namespace Alta_Flight.Data
 {
-    public class AppDBContext:DbContext
+    public class AppDBContext : DbContext
     {
         public AppDBContext(DbContextOptions<AppDBContext> options) : base(options)
         {
         }
+
         public DbSet<Accounts> Account { get; set; }
-        public DbSet<Roles> Role { get; set; }
-        public DbSet<Account_Groups> Account_Group { get; set; }
         public DbSet<Groups> Group { get; set; }
+        public DbSet<Account_Groups> Account_Group { get; set; }
+        public DbSet<Roles> Role { get; set; }
+        public DbSet<Permission> Permission { get; set; }
         public DbSet<UpdateVersions> UpdateVersion { get; set; }
+        public DbSet<Configurations> Configuration { get; set; }
+        public DbSet<Document_Lists> Document_List { get; set; }
+        public DbSet<Flight_document_lists> flight_Document_List { get; set; }
+        public DbSet<Flights> Flight { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Accounts>()
-                .HasOne<Roles>()          // Mỗi tài khoản có một vai trò
-                .WithMany()               // Một vai trò có thể gán cho nhiều tài khoản
-                .HasForeignKey(a => a.role_id)  // Thiết lập khóa ngoại role_id trong bảng Accounts
-                .OnDelete(DeleteBehavior.Restrict);
-
-            //modelBuilder.Entity<Account_Groups>()
-            //    .HasKey(ag => new { ag.accountID, ag.group_id }); // Khóa chính của bảng trung gian
-
-            //modelBuilder.Entity<Account_Groups>()
-            //    .HasOne<Groups>()
-            //    .WithMany(a => a.AccountGroups)
-            //    .HasForeignKey(ag => ag.group_id)
-            //    .OnDelete(DeleteBehavior.Cascade);
-
-            //modelBuilder.Entity<Account_Groups>()
-            //    .HasOne<Accounts>()
-            //    .WithMany(a => a.AccountGroups)
-            //    .HasForeignKey(ag => ag.accountID)
-            //    .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Accounts>()
-                .HasOne<Account_Groups>()
+            // Configure many-to-many relationship
+            modelBuilder.Entity<Account_Groups>()
+                .HasOne<Accounts>() // Liên kết với bảng Accounts qua accountID
                 .WithMany()
-                .HasForeignKey(a => a.accountID)
+                .HasForeignKey(ag => ag.accountID)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Groups>()
-                .HasOne<Account_Groups>()
+            modelBuilder.Entity<Account_Groups>()
+                .HasOne<Groups>() // Liên kết với bảng Groups qua group_id
                 .WithMany()
                 .HasForeignKey(ag => ag.group_id)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Accounts>()
-                .Property(a => a.group_id)
-                .IsRequired(false);  // group_id không bắt buộc
+                .HasOne<Roles>()
+                .WithMany()
+                .HasForeignKey(a => a.role_id)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Groups>()
+                .HasMany<Permission>()
+                .WithOne()
+                .HasForeignKey(p => p.group_id)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Accounts>()
+                .Property(a => a.group_id)
+                .IsRequired(false);
+
+            modelBuilder.Entity<Accounts>()
+                .HasMany<UpdateVersions>()
+                .WithOne()
+                .HasForeignKey(uv => uv.accountID)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Configurations>()
+                .HasOne<Permission>()
+                .WithMany()
+                .HasForeignKey(c => c.Permission_Id)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Document_Lists>()
+                .HasOne<Configurations>()
+                .WithMany()
+                .HasForeignKey(dl => dl.configuration_ID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Document_Lists>()
+                .HasOne<Accounts>()
+                .WithMany()
+                .HasForeignKey(dl => dl.accountID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Document_Lists>()
                 .HasOne<UpdateVersions>()
                 .WithMany()
-                .HasForeignKey(uv => uv.accountID) // Khóa ngoại
-                .OnDelete(DeleteBehavior.Cascade); // Xóa liên kết (nếu cần)
+                .HasForeignKey(dl => dl.Update_Version_ID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Document_Lists>()
+                .HasOne<Permission>()
+                .WithMany()
+                .HasForeignKey(dl => dl.Permission_Id)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Flight_document_lists>()
+                .HasOne<Document_Lists>() 
+                .WithMany()
+                .HasForeignKey(fdl => fdl.document_list_id)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Flight_document_lists>()
+                .HasOne<Flights>()
+                .WithMany()
+                .HasForeignKey(fdl => fdl.flight_ID)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Flights>()
+                .Property(a => a.document_list_id)
+                .IsRequired(false);
+
+            modelBuilder.Entity<Groups>()
+                .Property(gr => gr.accountID)
+                .IsRequired(false);
+
         }
     }
 }

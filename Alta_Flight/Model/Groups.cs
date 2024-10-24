@@ -18,9 +18,8 @@ namespace Alta_Flight.Model
         public DateTime CreateDate { get; set; }
 
         public string note { get; set; }
+        public int? accountID { get; set; }
 
-        // Thuộc tính điều hướng đến bảng trung gian (nhiều-nhiều)
-        //public ICollection<Account_Groups> AccountGroups { get; set; }
 
     }
 }
