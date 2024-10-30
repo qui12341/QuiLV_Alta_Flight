@@ -84,7 +84,9 @@ namespace Alta_Flight.Migrations
                     accountID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    phone = table.Column<int>(type: "int", nullable: false),
+                    phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     role_id = table.Column<int>(type: "int", nullable: false),
                     group_id = table.Column<int>(type: "int", nullable: true)
                 },

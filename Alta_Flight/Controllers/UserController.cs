@@ -1,5 +1,6 @@
 ﻿using Alta_Flight.Model;
 using Alta_Flight.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,6 +19,7 @@ namespace Alta_Flight.Controllers
 
         // GET: api/accounts
         [HttpGet]
+        [Authorize(Policy = "RequireAdminRole")]
         public async Task<ActionResult<IEnumerable<Accounts>>> GetAccounts()
         {
             var accounts = await _accountService.GetAllAccountsAsync();

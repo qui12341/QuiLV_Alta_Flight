@@ -9,5 +9,7 @@ namespace Alta_Flight.Services
         Task CreateAccountAsync(Accounts account);
         Task UpdateAccountAsync(Accounts account);
         Task DeleteAccountAsync(int id);
+        Task<Accounts> AuthenticateAsync(string userName, string password);
+
     }
 }
