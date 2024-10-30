@@ -42,16 +42,16 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("RequireAdminRole", policy =>
-        policy.RequireAssertion(context =>
-            context.User.HasClaim(c => c.Type == "Role" && c.Value == "1"))); // 1 là role_id c?a admin
+//builder.Services.AddAuthorization(options =>
+//{
+//    options.AddPolicy("RequireAdminRole", policy =>
+//        policy.RequireAssertion(context =>
+//            context.User.HasClaim(c => c.Type == "Role" && c.Value == "1"))); // 1 là role_id c?a admin
 
-    options.AddPolicy("RequireNonAdminRole", policy =>
-        policy.RequireAssertion(context =>
-            context.User.HasClaim(c => c.Type == "Role" && c.Value != "1"))); // Không ph?i admin
-});
+//    options.AddPolicy("RequireNonAdminRole", policy =>
+//        policy.RequireAssertion(context =>
+//            context.User.HasClaim(c => c.Type == "Role" && c.Value != "1"))); // Không ph?i admin
+//});
 
 var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]);
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

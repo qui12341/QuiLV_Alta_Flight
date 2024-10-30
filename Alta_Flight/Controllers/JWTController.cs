@@ -36,7 +36,7 @@ namespace Alta_Flight.Controllers
 
             // Tạo token JWT
             var token = _jwtService.GenerateToken(account);
-            return Ok(new { Token = token });
+            return Ok(token);
         }
     }
 }

@@ -8,6 +8,7 @@ namespace Alta_Flight.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IAccountService _accountService;
@@ -19,7 +20,6 @@ namespace Alta_Flight.Controllers
 
         // GET: api/accounts
         [HttpGet]
-        [Authorize(Policy = "RequireAdminRole")]
         public async Task<ActionResult<IEnumerable<Accounts>>> GetAccounts()
         {
             var accounts = await _accountService.GetAllAccountsAsync();
@@ -36,6 +36,7 @@ namespace Alta_Flight.Controllers
             return Ok(account);
         }
         [HttpPost]
+        [AllowAnonymous]
         public async Task<ActionResult<Accounts>> CreateAccount(Accounts accounts)
         {
             await _accountService.CreateAccountAsync(accounts);
@@ -44,6 +45,7 @@ namespace Alta_Flight.Controllers
 
         // PUT: api/accounts/{id}
         [HttpPut("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> UpdateAccount(int id, Accounts account)
         {
             if (id != account.accountID)

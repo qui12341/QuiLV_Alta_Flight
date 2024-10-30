@@ -1,5 +1,6 @@
 ﻿using Alta_Flight.Model;
 using Alta_Flight.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,8 @@ namespace Alta_Flight.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
+
     public class PermissionController : ControllerBase
     {
         private readonly IPermissionService _permissionService;
