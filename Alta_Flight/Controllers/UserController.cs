@@ -26,6 +26,7 @@ namespace Alta_Flight.Controllers
             return Ok(accounts);
         }
         [HttpGet("{id}")]
+
         public async Task<ActionResult<Accounts>> GetAccount(int id)
         {
             var account = await _accountService.GetAccountByIdAsync(id);
